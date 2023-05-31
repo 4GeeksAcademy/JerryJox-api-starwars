@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db
+from models import db, Film, User, Character, Starship, Planet, Cha_Favs, Pla_Favs, Shi_Favs, Collaboration
 #from models import Person
 
 app = Flask(__name__)
@@ -46,7 +46,6 @@ def handle_hello():
     results = User.query.all()
     users_list = list(map(lambda item: item.serialize(),results))
 
-
     response_body = {
         "msg": "Hello, this is your GET /user response ",
         "results": users_list
@@ -54,8 +53,36 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+
+@app.route('/character', methods=['GET'])
+def handle_hello():
+
+    results = Character.query.all()
+    characters_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /character response ",
+        "results": characters_list
+    }
+
+    return jsonify(response_body), 200
+
+
+@app.route('/starship', methods=['GET'])
+def handle_hello():
+
+    results = Starship.query.all()
+    starships_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /starship response ",
+        "results": starships_list
+    }
+
+    return jsonify(response_body), 200 
+
 # endpoint para consultar un dato en una tabla
-@app.route('/user/<int:id>', methods=['GET'])
+@app.route('/starship/<int:id>', methods=['GET'])
 def get_user(id):
     print(id)
 
