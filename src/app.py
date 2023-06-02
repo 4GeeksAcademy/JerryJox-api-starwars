@@ -41,7 +41,7 @@ def sitemap():
 
 # endpoint para consultar todos los datos de una tabla
 @app.route('/user', methods=['GET'])
-def handle_hello():
+def handle_user():
 
     results = User.query.all()
     users_list = list(map(lambda item: item.serialize(),results))
@@ -55,7 +55,7 @@ def handle_hello():
 
 
 @app.route('/character', methods=['GET'])
-def handle_hello():
+def handle_character():
 
     results = Character.query.all()
     characters_list = list(map(lambda item: item.serialize(),results))
@@ -69,7 +69,7 @@ def handle_hello():
 
 
 @app.route('/starship', methods=['GET'])
-def handle_hello():
+def handle_starship():
 
     results = Starship.query.all()
     starships_list = list(map(lambda item: item.serialize(),results))
@@ -80,6 +80,92 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200 
+
+
+@app.route('/planet', methods=['GET'])
+def handle_planet():
+
+    results = Planet.query.all()
+    planets_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /planet response ",
+        "results": planets_list
+    }
+
+    return jsonify(response_body), 200
+
+
+@app.route('/cha_favs', methods=['GET'])
+def handle_cha_favs():
+
+    results = Cha_Favs.query.all()
+    cha_favs_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /cha_favs response ",
+        "results": cha_favs_list
+    }
+
+    return jsonify(response_body), 200
+
+
+@app.route('/shi_favs', methods=['GET'])
+def handle_shi_favs():
+
+    results = Shi_Favs.query.all()
+    shi_favs_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /shi_favs response ",
+        "results": shi_favs_list
+    }
+
+    return jsonify(response_body), 200
+
+
+@app.route('/pla_favs', methods=['GET'])
+def handle_pla_favs():
+
+    results = Pla_Favs.query.all()
+    pla_favs_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /pla_favs response ",
+        "results": pla_favs_list
+    }
+
+    return jsonify(response_body), 200
+
+
+@app.route('/film', methods=['GET'])
+def handle_film():
+
+    results = Film.query.all()
+    films_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /film response ",
+        "results": films_list
+    }
+
+    return jsonify(response_body), 200
+
+
+@app.route('/collaboration', methods=['GET'])
+def handle_collaboration():
+
+    results = Collaboration.query.all()
+    collaborations_list = list(map(lambda item: item.serialize(),results))
+
+    response_body = {
+        "msg": "Hello, this is your GET /collaboration response ",
+        "results": collaborations_list
+    }
+
+    return jsonify(response_body), 200    
+
+
 
 # endpoint para consultar un dato en una tabla
 @app.route('/starship/<int:id>', methods=['GET'])
