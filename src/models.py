@@ -3,27 +3,31 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class User(db.Model):
-    id = db.Column(db.Integer(), primary_key=True, unique=True)
+    id = db.Column(db.Integer(), primary_key=True)
     user_name = db.Column(db.String(), nullable=False, unique=True)  
     email = db.Column(db.String(250), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
-    cha_favs = db.relationship("Cha_Favs", backref="user", lazy=True)   
-    pla_favs = db.relationship("Pla_Favs", backref="user", lazy=True)
-    shi_favs = db.relationship("Shi_Favs", backref="user", lazy=True)
+    cha_favs = db.relationship("Cha_Favs", backref="Cha_Favs", lazy=True)   
+    pla_favs = db.relationship("Pla_Favs", backref="Pla_Favs", lazy=True)
+    shi_favs = db.relationship("Shi_Favs", backref="Shi_Favs", lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.id
 
     def serialize(self):
         return {
+            "id": self.id,
             "user_name": self.user_name,
             "email": self.email,
             # "password": self.password,
+            # "cha_favs": [self.cha_favs.serialize() if self.cha_favs else None],
+            # "pla_favs": [self.pla_favs.serialize() if self.pla_favs else None],
+            # "shi_favs": [self.shi_favs.serialize() if self.shi_favs else None],
         }
 
 class Character(db.Model):
-    id = db.Column(db.Integer(), primary_key=True, unique=True)
-    name = db.Column(db.String(250), nullable=False, unique=True)
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(250), nullable=False)
     birth_year = db.Column(db.String(250), nullable=False)
     eye_color = db.Column(db.String(250))
     gender = db.Column(db.String(250))
@@ -33,9 +37,9 @@ class Character(db.Model):
     mass = db.Column(db.String(250), nullable=False)
     skin_color = db.Column(db.String(250), nullable=False)
     species = db.Column(db.String(250), nullable=False)
-    starship = db.Column(db.String(250), nullable=False)
-    films = db.Column(db.String(250), nullable=False)
-    cha_favs = db.relationship("Cha_Favs", backref="character", lazy=True)
+    starship = db.Column(db.String(250))
+    films = db.Column(db.String(250))
+    # cha_favs = db.relationship("Cha_Favs", backref="cha_Favs", lazy=True)
 
     def __repr__(self):
         return '<Character %r>' % self.id
@@ -56,7 +60,7 @@ class Character(db.Model):
         }
 
 class Starship(db.Model):
-    id = db.Column(db.Integer(), primary_key=True, unique=True)
+    id = db.Column(db.Integer(), primary_key=True)
     cargo_capacity = db.Column(db.Integer(), nullable=False)
     consumable = db.Column(db.String(250), nullable=False)
     cost_in_credits = db.Column(db.Integer(), nullable=False)
@@ -97,14 +101,15 @@ class Starship(db.Model):
             "starship_class": self.starship_class,
         }
 
+
 class Planet(db.Model):
-    id = db.Column(db.Integer(), primary_key=True, unique=True)
-    climate = db.Column(db.String(250), nullable=False)
-    films = db.Column(db.Integer(), primary_key=True)
-    gravity = db.Column(db.String(250), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    climate = db.Column(db.String(250))
+    films = db.Column(db.Integer, primary_key=True)
+    gravity = db.Column(db.String(250))
     name = db.Column(db.String(250), nullable=False)
-    orbital_period = db.Column(db.String(250), nullable=False)
-    population = db.Column(db.String(250), nullable=False)
+    orbital_period = db.Column(db.String(250))
+    population = db.Column(db.String(250))
     residents = db.Column(db.String(250), nullable=False)
     rotation_period = db.Column(db.String(250), nullable=False)
     surface_water = db.Column(db.String(250), nullable=False)
@@ -131,8 +136,8 @@ class Planet(db.Model):
 
 class Cha_Favs(db.Model):
     id = db.Column(db.Integer(), primary_key=True, unique=True)
-    id_cha_favs = db.Column(db.Integer(), db.ForeignKey("character.id"), nullable=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=False)
+    id_cha_favs = db.Column(db.Integer(), db.ForeignKey("character.id"), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), primary_key=True)
     
     def __repr__(self):
         return '<Cha_Favs %r>' % self.id
@@ -141,13 +146,13 @@ class Cha_Favs(db.Model):
         return {
             "id": self.id,
             "id_cha_favs": self.id_cha_favs,
-            "id_user": self.id_user,
+            "user_id": self.user_id,
         }
 
 class Pla_Favs(db.Model):
     id = db.Column(db.Integer(), primary_key=True, unique=True)
     id_pla_favs = db.Column(db.Integer(), db.ForeignKey("planet.id"), nullable=True)
-    id_user = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=True)
 
     def __repr__(self):
         return '<Pla_Favs %r>' % self.id
@@ -155,14 +160,15 @@ class Pla_Favs(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "id_user": self.id_user,
-            "users": self.users,
+            "id_pla_favs": self.id_pla_favs,
+            "user_id": self.user_id,
         }
 
 class Shi_Favs(db.Model):
     id = db.Column(db.Integer(), primary_key=True, unique=True)
     id_shi_favs = db.Column(db.Integer(), db.ForeignKey("starship.id"), nullable=True)
-    id_user = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=True)
+
    
     def __repr__(self):
         return '<Shi_Favs %r>' % self.id
@@ -170,16 +176,16 @@ class Shi_Favs(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "id_user": self.id_user,
-            "users": self.users,
+            "id_shi_favs": self.id_shi_favs,
+            "user_id": self.user_id,
         }
     
 class Film(db.Model):
     id = db.Column(db.Integer(), primary_key=True, unique=True)
     film_name = db.Column(db.String(250), nullable=False)
-    characters = db.Column(db.Integer(), db.ForeignKey("character.id"), nullable=False)
-    starships = db.Column(db.Integer(), db.ForeignKey("starship.id"), nullable=False)
-    planets = db.Column(db.Integer(), db.ForeignKey("planet.id"), nullable=False)
+    characters = db.Column(db.Integer(), db.ForeignKey("character.id"))
+    starships = db.Column(db.Integer(), db.ForeignKey("starship.id"))
+    planets = db.Column(db.Integer(), db.ForeignKey("planet.id"))
 
     def __repr__(self):
         return '<Film_Favs %r>' % self.id
@@ -195,10 +201,10 @@ class Film(db.Model):
 
 class Collaboration(db.Model):
     id = db.Column(db.Integer(), primary_key=True, unique=True)
-    id_films = db.Column(db.Integer(), db.ForeignKey("film.id"), nullable=False)
+    films = db.Column(db.Integer(), db.ForeignKey("film.id"), nullable=False)
     characters = db.Column(db.Integer(), db.ForeignKey("character.id"), nullable=False)
-    id_starships = db.Column(db.Integer(), db.ForeignKey("starship.id"), nullable=False)
-    id_planets = db.Column(db.Integer(), db.ForeignKey("planet.id"), nullable=False)
+    starships = db.Column(db.Integer(), db.ForeignKey("starship.id"), nullable=False)
+    planets = db.Column(db.Integer(), db.ForeignKey("planet.id"), nullable=False)
 
     def __repr__(self):
         return '<Collaboration %r>' % self.id
@@ -206,10 +212,10 @@ class Collaboration(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "id_films": self.id_films,
+            "films": self.films,
             "characters": self.characters,
-            "id_starships": self.id_starships,           
-            "id_planets": self.id_planets,
+            "starships": self.starships,           
+            "planets": self.planets,
         }
 
 

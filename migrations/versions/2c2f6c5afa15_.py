@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: ec17f8ff988c
+Revision ID: 2c2f6c5afa15
 Revises: 
-Create Date: 2023-06-02 18:49:28.622560
+Create Date: 2023-06-05 19:04:47.696226
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ec17f8ff988c'
+revision = '2c2f6c5afa15'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,11 +28,9 @@ def upgrade():
     sa.Column('mass', sa.String(length=250), nullable=False),
     sa.Column('skin_color', sa.String(length=250), nullable=False),
     sa.Column('species', sa.String(length=250), nullable=False),
-    sa.Column('starship', sa.String(length=250), nullable=False),
-    sa.Column('films', sa.String(length=250), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.Column('starship', sa.String(length=250), nullable=True),
+    sa.Column('films', sa.String(length=250), nullable=True),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('planet',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -66,8 +64,7 @@ def upgrade():
     sa.Column('films', sa.String(length=250), nullable=False),
     sa.Column('pilots', sa.String(length=250), nullable=False),
     sa.Column('starship_class', sa.String(length=250), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -76,24 +73,23 @@ def upgrade():
     sa.Column('password', sa.String(length=250), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('id'),
     sa.UniqueConstraint('user_name')
     )
     op.create_table('cha__favs',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('id_cha_favs', sa.Integer(), nullable=True),
+    sa.Column('id_cha_favs', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['id_cha_favs'], ['character.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id'),
+    sa.PrimaryKeyConstraint('id', 'id_cha_favs', 'user_id'),
     sa.UniqueConstraint('id')
     )
     op.create_table('film',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('film_name', sa.String(length=250), nullable=False),
-    sa.Column('characters', sa.Integer(), nullable=False),
-    sa.Column('starships', sa.Integer(), nullable=False),
-    sa.Column('planets', sa.Integer(), nullable=False),
+    sa.Column('characters', sa.Integer(), nullable=True),
+    sa.Column('starships', sa.Integer(), nullable=True),
+    sa.Column('planets', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['characters'], ['character.id'], ),
     sa.ForeignKeyConstraint(['planets'], ['planet.id'], ),
     sa.ForeignKeyConstraint(['starships'], ['starship.id'], ),
@@ -103,31 +99,31 @@ def upgrade():
     op.create_table('pla__favs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('id_pla_favs', sa.Integer(), nullable=True),
-    sa.Column('id_user', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['id_pla_favs'], ['planet.id'], ),
-    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
     op.create_table('shi__favs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('id_shi_favs', sa.Integer(), nullable=True),
-    sa.Column('id_user', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['id_shi_favs'], ['starship.id'], ),
-    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
     op.create_table('collaboration',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('id_films', sa.Integer(), nullable=False),
+    sa.Column('films', sa.Integer(), nullable=False),
     sa.Column('characters', sa.Integer(), nullable=False),
-    sa.Column('id_starships', sa.Integer(), nullable=False),
-    sa.Column('id_planets', sa.Integer(), nullable=False),
+    sa.Column('starships', sa.Integer(), nullable=False),
+    sa.Column('planets', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['characters'], ['character.id'], ),
-    sa.ForeignKeyConstraint(['id_films'], ['film.id'], ),
-    sa.ForeignKeyConstraint(['id_planets'], ['planet.id'], ),
-    sa.ForeignKeyConstraint(['id_starships'], ['starship.id'], ),
+    sa.ForeignKeyConstraint(['films'], ['film.id'], ),
+    sa.ForeignKeyConstraint(['planets'], ['planet.id'], ),
+    sa.ForeignKeyConstraint(['starships'], ['starship.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
