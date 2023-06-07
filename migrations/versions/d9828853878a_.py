@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 190418425df2
-Revises: 2c2f6c5afa15
-Create Date: 2023-06-05 19:17:40.137849
+Revision ID: d9828853878a
+Revises: 63e0f651cbb4
+Create Date: 2023-06-07 15:53:07.200067
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '190418425df2'
-down_revision = '2c2f6c5afa15'
+revision = 'd9828853878a'
+down_revision = '63e0f651cbb4'
 branch_labels = None
 depends_on = None
 
@@ -28,18 +28,7 @@ def upgrade():
         batch_op.create_unique_constraint(None, ['id'])
 
     with op.batch_alter_table('planet', schema=None) as batch_op:
-        batch_op.alter_column('climate',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=True)
-        batch_op.alter_column('gravity',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=True)
-        batch_op.alter_column('orbital_period',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=True)
-        batch_op.alter_column('population',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=True)
+        batch_op.create_unique_constraint(None, ['id'])
 
     with op.batch_alter_table('shi__favs', schema=None) as batch_op:
         batch_op.create_unique_constraint(None, ['id'])
@@ -53,18 +42,7 @@ def downgrade():
         batch_op.drop_constraint(None, type_='unique')
 
     with op.batch_alter_table('planet', schema=None) as batch_op:
-        batch_op.alter_column('population',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=False)
-        batch_op.alter_column('orbital_period',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=False)
-        batch_op.alter_column('gravity',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=False)
-        batch_op.alter_column('climate',
-               existing_type=sa.VARCHAR(length=250),
-               nullable=False)
+        batch_op.drop_constraint(None, type_='unique')
 
     with op.batch_alter_table('pla__favs', schema=None) as batch_op:
         batch_op.drop_constraint(None, type_='unique')

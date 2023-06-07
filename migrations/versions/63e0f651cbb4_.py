@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 2c2f6c5afa15
+Revision ID: 63e0f651cbb4
 Revises: 
-Create Date: 2023-06-05 19:04:47.696226
+Create Date: 2023-06-07 15:51:01.706528
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2c2f6c5afa15'
+revision = '63e0f651cbb4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,22 +29,20 @@ def upgrade():
     sa.Column('skin_color', sa.String(length=250), nullable=False),
     sa.Column('species', sa.String(length=250), nullable=False),
     sa.Column('starship', sa.String(length=250), nullable=True),
-    sa.Column('films', sa.String(length=250), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('planet',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('climate', sa.String(length=250), nullable=False),
-    sa.Column('films', sa.Integer(), nullable=False),
-    sa.Column('gravity', sa.String(length=250), nullable=False),
+    sa.Column('climate', sa.String(length=250), nullable=True),
+    sa.Column('gravity', sa.String(length=250), nullable=True),
     sa.Column('name', sa.String(length=250), nullable=False),
-    sa.Column('orbital_period', sa.String(length=250), nullable=False),
-    sa.Column('population', sa.String(length=250), nullable=False),
+    sa.Column('orbital_period', sa.String(length=250), nullable=True),
+    sa.Column('population', sa.String(length=250), nullable=True),
     sa.Column('residents', sa.String(length=250), nullable=False),
     sa.Column('rotation_period', sa.String(length=250), nullable=False),
     sa.Column('surface_water', sa.String(length=250), nullable=False),
     sa.Column('terrain', sa.String(length=250), nullable=False),
-    sa.PrimaryKeyConstraint('id', 'films'),
+    sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
     op.create_table('starship',

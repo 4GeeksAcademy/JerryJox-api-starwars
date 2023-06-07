@@ -7,9 +7,9 @@ class User(db.Model):
     user_name = db.Column(db.String(), nullable=False, unique=True)  
     email = db.Column(db.String(250), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
-    cha_favs = db.relationship("Cha_Favs", backref="Cha_Favs", lazy=True)   
-    pla_favs = db.relationship("Pla_Favs", backref="Pla_Favs", lazy=True)
-    shi_favs = db.relationship("Shi_Favs", backref="Shi_Favs", lazy=True)
+    cha_favs = db.relationship("Cha_Favs", backref="user", lazy=True)   
+    pla_favs = db.relationship("Pla_Favs", backref="user", lazy=True)
+    shi_favs = db.relationship("Shi_Favs", backref="user", lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.id
