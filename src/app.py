@@ -38,9 +38,9 @@ def sitemap():
 
 # ACÁ EMPIEZAN LOS ENDPOINTS
 
-######################################################
-# endpoint para consultar todos los datos de una tabla
-######################################################
+############################################################
+# endpoint para consultar todos los datos de la tabla user #
+############################################################
 
 
 @app.route('/user', methods=['GET'])
@@ -353,9 +353,11 @@ def get_collaboration(id):
 def create_user():
 
     body = json.loads(request.data)
+    # is_active=request.json.get("is_active",True)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    user = User(email=body["email"], password=body["password"], is_active=body["is_active"])
+    user = User(email=body["email"], password=body["password"], user_name=body["user_name"])
+    # , is_active=is_active
     db.session.add(user)
     db.session.commit()
 
@@ -473,7 +475,7 @@ def create_film():
 
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
-    print(body)
+    # print(body)
     film = Film(id=body["id"], film_name=body["film_name"], characters=body["characters"], starships=body["starships"], planets=body["planets"])
     db.session.add(film)
     db.session.commit()
@@ -500,6 +502,61 @@ def create_collaboration():
     }
 
     return jsonify(response_body), 200
+
+
+##############################################################
+# endpoint para eliminar un planeta de la tabla de favoritos #
+##############################################################
+
+# ruta en postman: /favorite/planet/<int:planet_id>
+
+@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+def handle_delete_fav_pla(planet_id):
+
+    # print(planet_id)
+
+    planet = Pla_Favs.query.get(planet_id)
+    if planet is None:
+        raise APIException('Planet not found', status_code=404)
+    db.session.delete(planet)
+    db.session.commit()
+
+    # print(planet)
+
+    response_body = {
+        "msg": "Hello, this is your DELETE /planet favorites response ",
+        # "results": data
+    }
+
+    return jsonify(response_body), 200
+
+
+################################################################
+# endpoint para eliminar un personaje de la tabla de favoritos #
+################################################################
+
+# ruta en postman: /favorite/people/<int:people_id>
+
+@app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
+def handle_delete_fav_cha(character_id):
+
+    print(character_id)
+
+    # character = Cha_Favs.query.get(character_id)
+    # if planet is None:
+    #     raise APIException('Planet not found', status_code=404)
+    # db.session.delete(character)
+    # db.session.commit()
+
+    # print(character)
+
+    response_body = {
+        "msg": "Hello, this is your DELETE /character favorites response ",
+        # "results": data
+    }
+
+    return jsonify(response_body), 200
+    
 
 
 

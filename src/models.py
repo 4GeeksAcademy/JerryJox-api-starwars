@@ -38,6 +38,7 @@ class Character(db.Model):
     skin_color = db.Column(db.String(250), nullable=False)
     species = db.Column(db.String(250), nullable=False)
     starship = db.Column(db.String(250))
+    cha_favs = db.relationship("Cha_Favs", backref="character", lazy=True)
     films = db.relationship("Film", backref="character", lazy=True)
 
     def __repr__(self):
@@ -134,8 +135,8 @@ class Planet(db.Model):
 
 class Cha_Favs(db.Model):
     id = db.Column(db.Integer(), primary_key=True, unique=True)
-    id_cha_favs = db.Column(db.Integer(), db.ForeignKey("character.id"), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), primary_key=True)
+    id_cha_favs = db.Column(db.Integer(), db.ForeignKey("character.id"), nullable=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=True)
     
     def __repr__(self):
         return '<Cha_Favs %r>' % self.id
