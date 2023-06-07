@@ -38,8 +38,7 @@ class Character(db.Model):
     skin_color = db.Column(db.String(250), nullable=False)
     species = db.Column(db.String(250), nullable=False)
     starship = db.Column(db.String(250))
-    films = db.Column(db.String(250))
-    # cha_favs = db.relationship("Cha_Favs", backref="cha_Favs", lazy=True)
+    films = db.relationship("Film", backref="character", lazy=True)
 
     def __repr__(self):
         return '<Character %r>' % self.id
@@ -105,7 +104,6 @@ class Starship(db.Model):
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     climate = db.Column(db.String(250))
-    films = db.Column(db.Integer, primary_key=True)
     gravity = db.Column(db.String(250))
     name = db.Column(db.String(250), nullable=False)
     orbital_period = db.Column(db.String(250))
@@ -115,6 +113,7 @@ class Planet(db.Model):
     surface_water = db.Column(db.String(250), nullable=False)
     terrain = db.Column(db.String(250), nullable=False)
     pla_favs = db.relationship("Pla_Favs", backref="planet", lazy=True)
+    films = db.relationship("Film", backref="planet", lazy=True)
 
     def __repr__(self):
         return '<Planet %r>' % self.id
@@ -123,7 +122,6 @@ class Planet(db.Model):
         return {
             "id": self.id,
             "climate": self.climate,
-            "films": self.films,
             "gravity": self.gravity,
             "name": self.name,
             "orbital_period": self.orbital_period,
@@ -188,7 +186,7 @@ class Film(db.Model):
     planets = db.Column(db.Integer(), db.ForeignKey("planet.id"))
 
     def __repr__(self):
-        return '<Film_Favs %r>' % self.id
+        return '<Film %r>' % self.id
 
     def serialize(self):
         return {
