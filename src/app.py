@@ -38,9 +38,10 @@ def sitemap():
 
 # ACÁ EMPIEZAN LOS ENDPOINTS
 
-############################################################
-# endpoint para consultar todos los datos de la tabla user #
-############################################################
+################################################
+# endpoint para consultar todos los datos de   #
+# una tabla characters, planets, users y otros #
+################################################
 
 
 @app.route('/user', methods=['GET'])
@@ -170,9 +171,33 @@ def handle_collaboration():
     return jsonify(response_body), 200    
 
 
-################################################
-# endpoint para consultar un dato en una tabla #
-################################################
+###############################################
+# endpoint para consultar todos los favoritos #
+# de un usuario actual                        #
+###############################################
+
+
+# @app.route('/users/favorites', methods=['GET'])
+# def handle_favorites():
+
+#     results = Cha_Favs.query.all(), Pla_Favs.query.all(), Shi_Favs.query.all()
+#     cha_favs_list = list(map(lambda item: item.serialize(),results))
+#     pla_favs_list = list(map(lambda item: item.serialize(),results))
+#     shi_favs_list = list(map(lambda item: item.serialize(),results))
+
+
+#     response_body = {
+#         "msg": "Hello, this is your GET /favorites response ",
+#         "results": cha_favs_list, pla_favs_list, shi_favs_list
+#     }
+
+#     return jsonify(response_body), 200  
+
+
+###########################################
+# endpoint para consultar todos los datos #
+# de un solo character, planet, y otros   #
+###########################################
 
 
 @app.route('/user/<int:id>', methods=['GET'])
