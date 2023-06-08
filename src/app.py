@@ -193,6 +193,25 @@ def handle_collaboration():
 
 #     return jsonify(response_body), 200  
 
+@app.route('/users/favorites', methods=['GET'])
+def handle_favorites():
+
+    results_shi = Shi_Favs.query.all()
+    results_character = Cha_Favs.query.all()
+    results_planets_favs = Pla_Favs.query.all()
+    cha_favs_list = list(map(lambda item: item.serialize(),results_shi))
+    pla_favs_list = list(map(lambda item: item.serialize(),results_character ))
+    shi_favs_list = list(map(lambda item: item.serialize(),results_planets_favs ))
+
+    favx = cha_favs_list + pla_favs_list + shi_favs_list
+
+    response_body = {
+        "msg": "Hello, this is your GET /favorites response ",
+        "results": favx
+    }
+
+    return jsonify(response_body), 200  
+
 
 ###########################################
 # endpoint para consultar todos los datos #
@@ -399,7 +418,7 @@ def create_character():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    character = Character(id=body["id"], name=body["name"], birth_year=body["birth_year"], eye_color=body["eye_color"], gender=body["gender"], hair_color=body["hair_color"], mass=body["mass"], skin_color=body["skin_color"], species=["species"], starship=["starship"],films=body["films"])
+    character = Character(name=body["name"], birth_year=body["birth_year"], eye_color=body["eye_color"], gender=body["gender"], hair_color=body["hair_color"], mass=body["mass"], skin_color=body["skin_color"], species=["species"], starship=["starship"],films=body["films"])
     db.session.add(character)
     db.session.commit()
 
@@ -416,7 +435,7 @@ def create_starship():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    starship = Starship(id=body["id"], cargo_capacity=body["cargo_capacity"], consumable=body["consumable"], cost_in_credits=body["cost_in_credits"], crew=body["crew"], hyperdrive_rating=body["hyperdrive_rating"], mglt=body["mglt"], length=body["length"], species=["species"], manufacturer=["manufacturer"], max_atmosfering_speed=body["max_atmosfering_speed"], model=body["model"], name=body["name"], passengers=body["passengers"], films=body["films"], pilots=body["pilots"], starship_class=body["starship_class"], ship_favs=body["ship_favs"])
+    starship = Starship(cargo_capacity=body["cargo_capacity"], consumable=body["consumable"], cost_in_credits=body["cost_in_credits"], crew=body["crew"], hyperdrive_rating=body["hyperdrive_rating"], mglt=body["mglt"], length=body["length"], species=["species"], manufacturer=["manufacturer"], max_atmosfering_speed=body["max_atmosfering_speed"], model=body["model"], name=body["name"], passengers=body["passengers"], films=body["films"], pilots=body["pilots"], starship_class=body["starship_class"], ship_favs=body["ship_favs"])
     db.session.add(starship)
     db.session.commit()
 
@@ -433,7 +452,7 @@ def create_planet():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    planet = Planet(id=body["id"], climate=body["climate"], films=body["films"], gravity=body["gravity"], name=body["name"], orbital_period=body["orbital_period"], population=body["population"], residents=body["residents"], rotation_period=body["rotation_period"], surface_water=body["surface_water"], terrain=body["terrain"], pla_favs=body["pla_favs"])
+    planet = Planet(climate=body["climate"], films=body["films"], gravity=body["gravity"], name=body["name"], orbital_period=body["orbital_period"], population=body["population"], residents=body["residents"], rotation_period=body["rotation_period"], surface_water=body["surface_water"], terrain=body["terrain"], pla_favs=body["pla_favs"])
     db.session.add(planet)
     db.session.commit()
 
@@ -450,7 +469,7 @@ def create_cha_favs():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    cha_favs = Cha_Favs(id=body["id"], id_cha_favs=body["id_cha_favs"], user_id=body["user_id"])
+    cha_favs = Cha_Favs(id_cha_favs=body["id_cha_favs"], user_id=body["user_id"])
     db.session.add(cha_favs)
     db.session.commit()
 
@@ -467,7 +486,7 @@ def create_pla_favs():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    pla_favs = Pla_Favs(id=body["id"], id_pla_favs=body["id_pla_favs"], user_id=body["user_id"])
+    pla_favs = Pla_Favs(id_pla_favs=body["id_pla_favs"], user_id=body["user_id"])
     db.session.add(pla_favs)
     db.session.commit()
 
@@ -484,7 +503,7 @@ def create_shi_favs():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    shi_favs = Shi_Favs(id=body["id"], id_shi_favs=body["id_shi_favs"], user_id=body["user_id"])
+    shi_favs = Shi_Favs(id_shi_favs=body["id_shi_favs"], user_id=body["user_id"])
     db.session.add(shi_favs)
     db.session.commit()
 
@@ -501,7 +520,7 @@ def create_film():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     # print(body)
-    film = Film(id=body["id"], film_name=body["film_name"], characters=body["characters"], starships=body["starships"], planets=body["planets"])
+    film = Film(film_name=body["film_name"], characters=body["characters"], starships=body["starships"], planets=body["planets"])
     db.session.add(film)
     db.session.commit()
 
@@ -518,7 +537,7 @@ def create_collaboration():
     body = json.loads(request.data)
     # json.loads(request.body.decode(encoding='UTF-8'))
     print(body)
-    collaboration = Collaboration(id=body["id"], film_name=body["film_name"], characters=body["characters"], starships=body["starships"], planets=body["planets"])
+    collaboration = Collaboration(film_name=body["film_name"], characters=body["characters"], starships=body["starships"], planets=body["planets"])
     db.session.add(collaboration)
     db.session.commit()
 
