@@ -389,9 +389,54 @@ def get_collaboration(id):
 
     return jsonify(response_body), 200
 
+###########################################
+# endpoint para crear un dato en la tabla #
+# de favoritos de planets / characters    #
+########################################### 
+
+# /favorite/planet/<int:planet_id>
+
+# from flask import request, jsonify
+# import json
+
+@app.route('/favorite/planet/<int:planet_id>/user/<int:user_id>', methods=['POST'])
+def create_fav_pla(planet_id, user_id):
+    body = request.get_json()
+    print(body)
+
+    fav_pla = Pla_Favs(id_pla_favs=planet_id, user_id=user_id)
+    db.session.add(fav_pla)
+    db.session.commit()
+
+    response_body = {
+        "msg": "El favorito de planeta ha sido creado",
+    }
+
+    return jsonify(response_body), 200
+
+# @app.route('/favorite/planet/<int:planet_id>/user/<int:user_id>', methods=['POST'])
+# # '/favorite/planet/<int:planet_id>/user/<int:user_id>'
+# def create_fav_pla(id_pla_favs, user_id):
+
+#     body = json.loads(request.data)
+#     print(body)
+#     fav_pla = Pla_Favs(id_pla_favs=body["planet_id"], user_id=body["user_id"])
+#     # , is_active=is_active
+#     db.session.add(fav_pla)
+#     db.session.commit()
+
+#     response_body = {
+#         "msg": "El favorito de planeta ha sido creado",
+#     }
+
+#     return jsonify(response_body), 200
+
+
 ############################################
 # endpoint para crear un dato en una tabla #
 ############################################
+
+# /favorite/planet/<int:planet_id>
 
 @app.route('/user', methods=['POST'])
 def create_user():
