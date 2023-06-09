@@ -414,6 +414,22 @@ def create_fav_pla(planet_id, user_id):
 
     return jsonify(response_body), 200
 
+
+@app.route('/favorite/character/<int:character_id>/user/<int:user_id>', methods=['POST'])
+def create_fav_cha(character_id, user_id):
+    body = request.get_json()
+    print(body)
+
+    fav_cha = Cha_Favs(id_cha_favs=character_id, user_id=user_id)
+    db.session.add(fav_cha)
+    db.session.commit()
+
+    response_body = {
+        "msg": "El favorito de personaje ha sido creado",
+    }
+
+    return jsonify(response_body), 200
+
 # @app.route('/favorite/planet/<int:planet_id>/user/<int:user_id>', methods=['POST'])
 # # '/favorite/planet/<int:planet_id>/user/<int:user_id>'
 # def create_fav_pla(id_pla_favs, user_id):
