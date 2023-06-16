@@ -95,7 +95,7 @@ class Starship(db.Model):
             "max_atmosfering_speed": self.max_atmosfering_speed,
             "model": self.model,
             "name": self.name,
-            "passenger": self.passenger,
+            "passengers": self.passengers,
             "films": self.films,
             "pilots": self.pilots,
             "starship_class": self.starship_class,

@@ -263,7 +263,7 @@ def get_starship(id):
 
     starship = Starship.query.filter_by(id=id).first()
     # user = User.query.get(id)
-    print(user.serialize())
+    print(starship.serialize())
     # results = User.query.all()
     # users_list = list(map(lambda item: item.serialize(),results))
 
@@ -318,7 +318,7 @@ def get_cha_favs(id):
 def get_pla_favs(id):
     print(id)
 
-    cha_favs = Pla_Favs.query.filter_by(id=id).first()
+    pla_favs = Pla_Favs.query.filter_by(id=id).first()
     # user = User.query.get(id)
     print(pla_favs.serialize())
     # results = User.query.all()
@@ -642,16 +642,16 @@ def handle_delete_fav_pla(planet_id):
 
 # ruta en postman: /favorite/people/<int:people_id>
 
-@app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
+@app.route('/favorite/character/<int:character_id>', methods=['DELETE'])
 def handle_delete_fav_cha(character_id):
 
-    print(character_id)
+    # print(character_id)
 
-    # character = Cha_Favs.query.get(character_id)
-    # if planet is None:
-    #     raise APIException('Planet not found', status_code=404)
-    # db.session.delete(character)
-    # db.session.commit()
+    character = Cha_Favs.query.get(character_id)
+    if character is None:
+        raise APIException('Character not found', status_code=404)
+    db.session.delete(character)
+    db.session.commit()
 
     # print(character)
 
