@@ -8,8 +8,15 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, Film, User, Character, Starship, Planet, Cha_Favs, Pla_Favs, Shi_Favs, Collaboration
+from models import db, Film, User, Character, Starship, Planet, Cha_Favs, Pla_Favs, Shi_Favs
+# , Collaboration
 #from models import Person
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -25,6 +32,9 @@ MIGRATE = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 setup_admin(app)
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+jwt = JWTManager(app)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
@@ -396,9 +406,6 @@ def get_collaboration(id):
 
 # /favorite/planet/<int:planet_id>
 
-# from flask import request, jsonify
-# import json
-
 @app.route('/favorite/planet/<int:planet_id>/user/<int:user_id>', methods=['POST'])
 def create_fav_pla(planet_id, user_id):
     body = request.get_json()
@@ -661,6 +668,30 @@ def handle_delete_fav_cha(character_id):
     }
 
     return jsonify(response_body), 200
+
+######################
+#  Endpoint de Login #
+######################
+
+# Create a route to authenticate your users and return JWTs. The
+# create_access_token() function is used to actually generate the JWT.
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+
+    user = User.query.filter_by(email=email).first()
+    # print(user.email)
+
+    if user is None:
+       return jsonify({"msg": "El usuario no existe"}), 404 
+
+       #        None.email
+    if email != user.email or password != user.password:
+        return jsonify({"msg": "Email y/o password incorrectos"}), 401
+
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token)
     
 
 
